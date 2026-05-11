@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Мотивационная шкала — Монтессори Поглубже</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,400&display=swap');
+
+  :root {
+    --l1: #1a237e; --l2: #283593; --l3: #1565c0; --l4: #0277bd;
+    --l5: #00695c; --l6: #2e7d32; --l7: #e65100; --l8: #b71c1c;
+    --bg: #0f0f1a;
+    --card: #16162a;
+    --text: #e8eaf6;
+    --muted: #9fa8da;
+    --gold: #f9a825;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Manrope', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    text-align: center;
+    padding: 3rem 2rem 2rem;
+    position: relative;
+  }
+  .rainbow-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg,
+      var(--l1) 0%, var(--l2) 14%, var(--l3) 28%, var(--l4) 42%,
+      var(--l5) 56%, var(--l6) 70%, var(--l7) 84%, var(--l8) 100%);
+  }
+  .program-tag {
+    display: inline-block;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: 0.75rem;
+  }
+  header h1 span { font-style: italic; color: var(--gold); }
+  header p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    font-weight: 400;
+    max-width: 520px;
+    margin: 0 auto 2rem;
+    line-height: 1.6;
+  }
+
+  /* ─── LABELS ─── */
+  .axis-labels {
+    display: flex;
+    justify-content: space-between;
+    max-width: 860px;
+    margin: 0 auto 0.5rem;
+    padding: 0 1rem;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    font-weight: 700;
+  }
+  .axis-labels .fear { color: var(--l2); }
+  .axis-labels .love { color: var(--gold); }
+
+  /* ─── SCALE ─── */
+  .scale {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 1rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .level-card {
+    border-radius: 8px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+  }
+  .level-card:hover { transform: translateX(4px); }
+  .level-card.active { transform: translateX(4px); }
+
+  .level-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .level-num {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    color: white;
+  }
+
+  .level-info { flex: 1; }
+  .level-name {
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+  .level-sub {
+    font-size: 0.82rem;
+    font-weight: 400;
+    opacity: 0.75;
+  }
+
+  .level-arrow {
+    font-size: 1rem;
+    opacity: 0.6;
+    transition: transform 0.3s ease;
+  }
+  .level-card.active .level-arrow { transform: rotate(90deg); }
+
+  /* ─── EXPANDED CONTENT ─── */
+  .level-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .level-card.active .level-body { max-height: 600px; }
+
+  .level-body-inner {
+    padding: 0 18px 18px 68px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+  }
+
+  @media (max-width: 600px) {
+    .level-body-inner { grid-template-columns: 1fr; padding-left: 18px; }
+  }
+
+  .info-block {
+    background: rgba(255,255,255,0.05);
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+  .info-block h4 {
+    font-size: 0.68rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 8px;
+    opacity: 0.6;
+  }
+  .info-block p {
+    font-size: 0.82rem;
+    line-height: 1.65;
+    font-weight: 400;
+    opacity: 0.9;
+  }
+
+  /* ─── SELF-REFLECTION SECTION ─── */
+  .reflect-section {
+    max-width: 860px;
+    margin: 0 auto 2rem;
+    padding: 0 1rem;
+  }
+  .reflect-card {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 2rem;
+    border: 1px solid rgba(249, 168, 37, 0.2);
+  }
+  .reflect-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+    color: var(--gold);
+  }
+  .reflect-card p {
+    color: var(--muted);
+    font-size: 0.88rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+  }
+
+  .selector-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 1.5rem;
+  }
+  .sel-btn {
+    border: none;
+    border-radius: 6px;
+    padding: 8px 14px;
+    font-family: 'Manrope', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    opacity: 0.65;
+    transition: opacity 0.2s, transform 0.15s;
+    color: white;
+    letter-spacing: 0.5px;
+  }
+  .sel-btn:hover { opacity: 0.85; }
+  .sel-btn.picked { opacity: 1; transform: scale(1.05); outline: 2px solid white; }
+
+  .reflection-output {
+    min-height: 90px;
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    background: rgba(255,255,255,0.05);
+    transition: all 0.3s ease;
+  }
+  .reflection-output h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .reflection-output p {
+    font-size: 0.84rem;
+    line-height: 1.65;
+    color: var(--muted);
+    margin-bottom: 0;
+  }
+  .reflection-output .question {
+    font-style: italic;
+    color: var(--gold);
+    font-size: 0.88rem;
+    margin-top: 8px;
+    font-family: 'Playfair Display', serif;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    color: var(--muted);
+    font-size: 0.78rem;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  footer strong { color: var(--gold); }
+
+  /* ─── PULSE ANIMATION ─── */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .level-card { animation: fadeIn 0.4s ease both; }
+  .level-card:nth-child(1) { animation-delay: 0.05s; }
+  .level-card:nth-child(2) { animation-delay: 0.10s; }
+  .level-card:nth-child(3) { animation-delay: 0.15s; }
+  .level-card:nth-child(4) { animation-delay: 0.20s; }
+  .level-card:nth-child(5) { animation-delay: 0.25s; }
+  .level-card:nth-child(6) { animation-delay: 0.30s; }
+  .level-card:nth-child(7) { animation-delay: 0.35s; }
+  .level-card:nth-child(8) { animation-delay: 0.40s; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="rainbow-bar"></div>
+  <div class="program-tag">Монтессори Поглубже · Блок 2 · Мотивация</div>
+  <h1>Путешествие <span>от страха к любви</span></h1>
+  <p>Нажмите на любой уровень, чтобы увидеть, как он проявляется в поведении ребёнка — и что может сделать взрослый</p>
+</header>
+
+<div class="axis-labels">
+  <span class="fear">↑ СТРАХ</span>
+  <span class="love">↓ ЛЮБОВЬ</span>
+</div>
+
+<div class="scale" id="scale"></div>
+
+<div class="reflect-section">
+  <div class="reflect-card">
+    <h2>Рефлексия: где прямо сейчас?</h2>
+    <p>Вспомните конкретного ребёнка (или ученика) в конкретный момент сегодня. Выберите уровень, который лучше всего описывает его состояние:</p>
+    <div class="selector-row" id="selectorRow"></div>
+    <div class="reflection-output" id="reflectionOutput">
+      <p style="opacity:0.5; font-style:italic;">Выберите уровень выше — появится подсказка для наблюдения</p>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <strong>Montessori Festival Spring 2026</strong> &nbsp;·&nbsp;
+  Авторская программа «Монтессори Поглубже» &nbsp;·&nbsp;
+  Дмитрий
+</footer>
+
+<script>
+const LEVELS = [
+  {
+    n: 1, name: "СТРАХ", sub: "Действие из страха наказания",
+    color: "#1a237e",
+    what: "Ребёнок делает что-то, чтобы избежать наказания, крика, отвержения. Тело зажато, взгляд следит за взрослым, а не за материалом.",
+    signs: "Замирает при вопросах. Смотрит на взрослого перед каждым движением. Плачет или молчит при ошибке. Не инициирует ничего сам.",
+    adult: "Не спешите «решать». Сначала создайте безопасность. Тихое присутствие важнее слов. Устраните источник страха в среде.",
+    question: "Чего именно боится ребёнок прямо сейчас — ошибки, вашей реакции, другого ребёнка?"
+  },
+  {
+    n: 2, name: "ИЗБЕГАНИЕ", sub: "Уход от напряжения и опасности",
+    color: "#283593",
+    what: "«Лучше ничего не делать, чем сделать неправильно». Пассивность, уход в сторону, невидимость — как стратегия выживания.",
+    signs: "Долго смотрит, но не трогает. Переключается без завершения. Говорит «не хочу», «не знаю». Становится незаметным в классе.",
+    adult: "Наблюдайте, не вмешивайтесь. Предложите самый простой путь к действию. Никакого давления, никакого «давай попробуем».",
+    question: "Что происходило в прошлый раз, когда он пробовал? Что он помнит?"
+  },
+  {
+    n: 3, name: "ПОДЧИНЕНИЕ", sub: "Соответствие ожиданиям среды",
+    color: "#1565c0",
+    what: "Ребёнок делает то, что нужно — но без внутреннего движения. Внешне выглядит как «работа». Педагог часто не замечает разницы.",
+    signs: "Выполняет задание точно, но без интереса. Не задаёт вопросов. Не возвращается к материалу сам. Легко отвлекается как только взрослый ушёл.",
+    adult: "Не путайте послушание с мотивацией. Предложите выбор внутри работы. Наблюдайте: есть ли хоть малейший огонёк?",
+    question: "Если бы взрослого не было рядом — ребёнок продолжил бы работу?"
+  },
+  {
+    n: 4, name: "ЖЕЛАНИЕ НРАВИТЬСЯ", sub: "Действие ради одобрения и похвалы",
+    color: "#0277bd",
+    what: "Мотивация зависит от реакции взрослого. Ребёнок ищет контакт глазами, ждёт «молодец». Без похвалы — теряется.",
+    signs: "Работает хорошо, когда педагог рядом. Первое, что говорит — «посмотри». Расстраивается, если не заметили. Меняет мнение вслед за взрослым.",
+    adult: "Убирайте собственную оценку из разговора. Задавайте вопросы к самому ребёнку: «А ты как думаешь?» Хвалите усилие, а не результат.",
+    question: "Что случится с этой работой, если вы уйдёте и не вернётесь полчаса?"
+  },
+  {
+    n: 5, name: "ИНТЕРЕС", sub: "Первые искры живого любопытства",
+    color: "#00695c",
+    what: "Первый настоящий внутренний импульс. Ребёнок сам приближается. Взгляд загорается. Тело расслабляется. Это порог — беречь!",
+    signs: "Подходит сам или задерживается без причины. Задаёт вопросы — не для педагога, а для себя. Не торопится уходить. Может вернуться завтра.",
+    adult: "Не вмешивайтесь! Не объясняйте. Дайте время и пространство. Будьте рядом — но незаметно. Не ломайте момент похвалой.",
+    question: "Что именно зажгло его — тема, материал, другой ребёнок, случайность?"
+  },
+  {
+    n: 6, name: "ВОВЛЕЧЁННОСТЬ", sub: "Погружение, концентрация, поток",
+    color: "#2e7d32",
+    what: "Ребёнок полностью поглощён. Не слышит вокруг. Возвращается к ошибке сам. Это то, что Монтессори называла началом нормализации.",
+    signs: "Работает долго без перерыва. Не реагирует на шум. Начинает заново, если что-то пошло не так. Тело устойчивое, спокойное.",
+    adult: "Защищайте концентрацию! Не подходите, не комментируйте, не хвалите прямо сейчас. Оберегайте это состояние как что-то драгоценное.",
+    question: "Сколько он уже работает? Как давно вы последний раз его трогали взглядом?"
+  },
+  {
+    n: 7, name: "СТРАСТЬ", sub: "Глубокое увлечение, самоотдача",
+    color: "#e65100",
+    what: "Ребёнок возвращается к теме снова и снова. Связывает её с другими областями. Хочет делиться. Это уже не интерес — это глубина.",
+    signs: "Приносит из дома. Рассказывает другим детям. Рисует, строит, придумывает вне урока. Сам ищет новые материалы и источники.",
+    adult: "Идите за ним. Обогащайте среду в направлении его интереса. Соединяйте с другими детьми со схожим увлечением. Не ограничивайте рамками программы.",
+    question: "Что ещё в классе может питать этот интерес? Кто из других детей тоже увлечён этим?"
+  },
+  {
+    n: 8, name: "ЛЮБОВЬ", sub: "Нормализованная свободная деятельность",
+    color: "#b71c1c",
+    what: "Ребёнок действует из любви к делу, к миру, к жизни. Это не цель как финиш — это состояние, к которому Монтессори призывала всю жизнь готовить.",
+    signs: "Внутреннее спокойствие и наполненность. Помогает другим без просьбы. Работает в тишине и радости. Ошибка — не трагедия, а момент познания.",
+    adult: "Наблюдайте с благодарностью. Вы сделали своё дело — создали условия. Теперь учитесь у него: что он показывает вам о природе человека?",
+    question: "Что вы чувствуете, наблюдая за ним прямо сейчас?"
+  }
+];
+
+const scale = document.getElementById('scale');
+const selectorRow = document.getElementById('selectorRow');
+const reflOut = document.getElementById('reflectionOutput');
+
+LEVELS.forEach(lv => {
+  const card = document.createElement('div');
+  card.className = 'level-card';
+  card.style.background = lv.color + '22';
+  card.style.border = `1px solid ${lv.color}55`;
+
+  card.innerHTML = `
+    <div class="level-header" style="background:${lv.color}33">
+      <div class="level-num" style="background:${lv.color}">${lv.n}</div>
+      <div class="level-info">
+        <div class="level-name" style="color:white">${lv.name}</div>
+        <div class="level-sub" style="color:rgba(255,255,255,0.7)">${lv.sub}</div>
+      </div>
+      <div class="level-arrow" style="color:white">›</div>
+    </div>
+    <div class="level-body">
+      <div class="level-body-inner">
+        <div class="info-block">
+          <h4 style="color:${lv.color === '#b71c1c' ? '#ef9a9a' : lv.color === '#e65100' ? '#ffcc02' : '#90caf9'}">Что происходит</h4>
+          <p>${lv.what}</p>
+        </div>
+        <div class="info-block">
+          <h4 style="color:#a5d6a7">Признаки</h4>
+          <p>${lv.signs}</p>
+        </div>
+        <div class="info-block">
+          <h4 style="color:#ffe082">Взрослый может</h4>
+          <p>${lv.adult}</p>
+        </div>
+      </div>
+    </div>`;
+
+  card.addEventListener('click', () => {
+    const isActive = card.classList.contains('active');
+    document.querySelectorAll('.level-card').forEach(c => c.classList.remove('active'));
+    if (!isActive) card.classList.add('active');
+  });
+
+  scale.appendChild(card);
+
+  // Selector button
+  const btn = document.createElement('button');
+  btn.className = 'sel-btn';
+  btn.style.background = lv.color;
+  btn.textContent = `${lv.n}. ${lv.name}`;
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.sel-btn').forEach(b => b.classList.remove('picked'));
+    btn.classList.add('picked');
+    showReflection(lv);
+  });
+  selectorRow.appendChild(btn);
+});
+
+function showReflection(lv) {
+  reflOut.style.borderLeft = `3px solid ${lv.color}`;
+  reflOut.innerHTML = `
+    <h3 style="color:white">${lv.n}. ${lv.name}</h3>
+    <p>${lv.adult}</p>
+    <p class="question">${lv.question}</p>`;
+}
+</script>
+</body>
+</html>
